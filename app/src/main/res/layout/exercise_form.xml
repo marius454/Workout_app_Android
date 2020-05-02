@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBackground"
+    android:backgroundTint="@color/colorBackground"
+    app:cardElevation="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:background="@color/colorBackground">
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/TextExercise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_margin="3dp"
+                android:text="Exercise 1"
+                android:textSize="18sp"
+                android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/TextSets"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:text="Sets"
+                android:textSize="18sp"
+                android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/TextReps"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:text="Reps"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:textColor="@color/colorText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutEdit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/LinearLayoutText"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <EditText
+                android:id="@+id/EditExercise"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_margin="3dp"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/white"
+                android:textColor="@color/colorText"/>
+            <EditText
+                android:id="@+id/EditSets"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/white"
+                android:textColor="@color/colorText"/>
+            <EditText
+                android:id="@+id/EditReps"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/white"
+                android:textColor="@color/colorText"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

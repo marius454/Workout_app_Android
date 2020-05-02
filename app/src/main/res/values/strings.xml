@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Workout App</string>
+    <string name="welcome_text">Welcome to My Workout App\nSelect a category</string>
+    <string name="custom_programs">Select which program you want use</string>
+    <string name="create_program">Create your perfect training program</string>
+    <string name="main_option1">Custom training programs</string>
+    <string name="main_option2">Pre-made training programs</string>
+    <string name="main_option3">General training information</string>
+    <string name="create_button">Create a custom program</string>
+    <string name="create_option1">How many days per week will you train?</string>
+    <string name="customization_buttonAdd">Add Exercise</string>
+    <string name="customization_buttonSave">Save Exercises</string>
+    <string name="customization_buttonRemove">Remove Exercise</string>
+</resources>

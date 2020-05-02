@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
+    android:backgroundTint="@color/colorBackground">
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutEdit"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/ButtonDay"
+            android:layout_width="292dp"
+            android:layout_height="68dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginBottom="11dp"
+            android:gravity="center"
+            android:background="@drawable/my_button"
+            android:textColor="@color/colorButtonText"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
