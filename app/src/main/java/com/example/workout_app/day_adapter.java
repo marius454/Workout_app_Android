@@ -1,5 +1,6 @@
 package com.example.workout_app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,17 +40,16 @@ public class day_adapter extends RecyclerView.Adapter<day_adapter.viewHolder> {
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         final day_form currentItem = mdayList.get(position);
-        String tag = "Button" + currentItem.getDayNr().toString();
 
         holder.mButton.setText(currentItem.getDayNrText());
         holder.mButton.setId(currentItem.getDayNr());
-        holder.mButton.setTag(tag);
         holder.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(currentItem.getContext(), DayCustomization.class);
-                intent.putExtra("dayNrText", currentItem.getDayNrText());
-                currentItem.getContext().startActivity(intent);
+                intent.putExtra("dayNrText", currentItem.getDayNr());
+                intent.putExtra("Exercises", currentItem.getExercises());
+                ((Activity) currentItem.getContext()).startActivityForResult(intent, currentItem.getDayNr());
             }
         });
     }
