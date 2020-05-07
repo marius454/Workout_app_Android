@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
@@ -24,33 +21,34 @@ class DayCustomization : AppCompatActivity() {
         actionbar!!.title = ""
         actionbar.setDisplayHomeAsUpEnabled(true)
 
-        var dayNrText = intent.getStringExtra("dayNrText")
-        var title = findViewById<TextView>(R.id.TextDay)
+        val dayNrText = intent.getStringExtra("dayNrText")
+        val title = findViewById<TextView>(R.id.TextDay)
         title.text = dayNrText
 
         var i = 1
-        var ex_list = arrayListOf<exercise_form>()
-        var exercises = intent.getParcelableArrayListExtra<Exercise>("Exercises")
+        val ex_list = arrayListOf<exercise_form>()
+        val exercises = intent.getParcelableArrayListExtra<Exercise>("Exercises")
         if (exercises != arrayListOf<Exercise>()){
             for (item in exercises){
                 ex_list.add(exercise_form(i))
                 ex_list[i-1].setExercise(item)
                 i++
             }
+            i--
         }else{
             ex_list.add(exercise_form(i))
         }
 
 
-        var mRecyclerView = findViewById<RecyclerView>(R.id.ex_recycler)
-        var mLayoutManager = LinearLayoutManager(this)
-        var mAdapter = exercise_adapter(ex_list)
+        val mRecyclerView = findViewById<RecyclerView>(R.id.ex_recycler)
+        val mLayoutManager = LinearLayoutManager(this)
+        val mAdapter = exercise_adapter(ex_list)
 
         mRecyclerView.setHasFixedSize(false)
         mRecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
 
-        var buttonAdd = findViewById<Button>(R.id.buttonAdd)
+        val buttonAdd = findViewById<Button>(R.id.buttonAdd)
         buttonAdd.setOnClickListener{
             if (i < 10) {
                 i++
@@ -59,7 +57,7 @@ class DayCustomization : AppCompatActivity() {
             }
         }
 
-        var buttonRemove = findViewById<Button>(R.id.buttonRemove)
+        val buttonRemove = findViewById<Button>(R.id.buttonRemove)
         buttonRemove.setOnClickListener{
             if (ex_list != arrayListOf<exercise_form>()){
                 i--
@@ -68,33 +66,32 @@ class DayCustomization : AppCompatActivity() {
             }
         }
 
-        var buttonSave = findViewById<Button>(R.id.buttonSave)
+        val buttonSave = findViewById<Button>(R.id.buttonSave)
         buttonSave.setOnClickListener{
             var test_fill = 0
-            var test_range = 0
             for (j in 1..i){
-                var name = findViewById<EditText>(j).text.toString()
-                var sets = findViewById<EditText>(j+100).text.toString().toInt()
-                var reps = findViewById<EditText>(j+200).text.toString().toInt()
-                if (name == null || sets == null || reps == null){
+                val name = findViewById<EditText>(j).text.toString()
+                val setsText = findViewById<EditText>(j+100).text.toString()
+                val repsText = findViewById<EditText>(j+200).text.toString()
+                var sets = 0
+                var reps = 0
+                if (name == "" || setsText == "" || repsText == ""){
                     test_fill ++
-                }
-                if(sets > 999 || sets < 0 || reps > 999 || reps < 0){
-                    test_range ++
+                } else {
+                    sets = setsText.toInt()
+                    reps = repsText.toInt()
                 }
                 ex_list[j-1].setExercise(name, sets, reps)
             }
             if (test_fill > 0){
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            if (test_range > 0){
-                Toast.makeText(this, "Sets or Reps not in acceptable range [0;999]", Toast.LENGTH_SHORT)
-            }
-            var exercises = arrayListOf<Exercise>()
+            val exercises = arrayListOf<Exercise>()
             for (item in ex_list){
                 exercises.add(item.exercise)
             }
-            var resultIntent = Intent().apply{
+            val resultIntent = Intent().apply{
                 putExtra("Exercises", exercises)
             }
 

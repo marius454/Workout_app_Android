@@ -1,21 +1,27 @@
 package com.example.workout_app
 
 import android.app.Activity
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.SeekBar
-import android.widget.TextView
+import android.text.InputFilter
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class CreateProgram : AppCompatActivity() {
     lateinit var day_list: ArrayList<day_form>
+    lateinit var mDatabaseHelper: DatabaseHelper
+    lateinit var programName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_program)
+        mDatabaseHelper = DatabaseHelper(this)
 
         val actionbar = supportActionBar
         actionbar!!.title = ""
@@ -24,10 +30,10 @@ class CreateProgram : AppCompatActivity() {
         day_list = arrayListOf<day_form>()
         day_list.add(day_form(this, 1))
 
-        var seekBar = findViewById<SeekBar>(R.id.seekBar)
-        var nrDays = findViewById<TextView>(R.id.textView3)
-        var mRecyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        var mLayoutManager = LinearLayoutManager(this)
+        val seekBar = findViewById<SeekBar>(R.id.seekBar)
+        val nrDays = findViewById<TextView>(R.id.textView3)
+        val mRecyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val mLayoutManager = LinearLayoutManager(this)
         var mAdapter = day_adapter(day_list)
 
         mRecyclerView.setHasFixedSize(true)
@@ -36,14 +42,18 @@ class CreateProgram : AppCompatActivity() {
 
         var currentProgress = 1
         seekBar.max = 6
+        val ex_list = arrayListOf<ArrayList<Exercise>>()
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 currentProgress = progress + 1
                 nrDays.text = currentProgress.toString()
 
-                var ex_list = arrayListOf<ArrayList<Exercise>>()
                 for (i in 0..(day_list.size - 1)){
-                    ex_list.add(day_list[i].exercises)
+                    if (ex_list.size < day_list.size){
+                        ex_list.add(day_list[i].exercises)
+                    } else{
+                        ex_list[i] = day_list[i].exercises
+                    }
                 }
 
                 day_list.clear()
@@ -63,12 +73,23 @@ class CreateProgram : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
+        val saveButton = findViewById<Button>(R.id.buttonSave)
+        saveButton.setOnClickListener {
+            for (day in day_list){
+                if (day.exercises == arrayListOf<Exercise>()){
+                    Toast.makeText(this, day.dayNrText + " form not filled", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+            nameAlert()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
-            var exercises = data?.getParcelableArrayListExtra<Exercise>("Exercises")
+            val exercises = data?.getParcelableArrayListExtra<Exercise>("Exercises")
             day_list[requestCode - 1].setExercises(exercises)
         }
     }
@@ -76,5 +97,33 @@ class CreateProgram : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun save(name:String, day_list: ArrayList<day_form>){
+        mDatabaseHelper.clearDB()
+        val insertData = mDatabaseHelper.addProgram(name, day_list)
+
+
+        if (insertData){
+            Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun nameAlert() {
+        programName = ""
+        val alert = AlertDialog.Builder(this)
+        val nameEditText = EditText(this)
+        nameEditText.filters = arrayOf<InputFilter> (InputFilter.LengthFilter(20))
+        alert.setMessage("Please name this program message")
+        alert.setTitle("Name your program")
+        alert.setView(nameEditText)
+        alert.setPositiveButton("Save"){ dialog, positiveButton ->
+            programName = nameEditText.text.toString()
+            save(programName, day_list)
+            val intent = Intent(this, ProgramSelection::class.java)
+            startActivity(intent)
+        }
+        alert.show()
     }
 }
