@@ -135,6 +135,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor getProgram(int program_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME +
+                " where " + COL1 + " = " + program_id;
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
+    public Cursor getProgramExercises(int program_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + eTABLE_NAME +
+                " where " + eCOL2 + " = " + program_id;
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
     public void clearDB(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("drop table if exists " + TABLE_NAME);

@@ -26,27 +26,34 @@
             android:text="@string/custom_programs"
             android:textColor="@color/colorText"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/LinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="292dp"
-            android:layout_height="68dp"
-            android:layout_marginStart="59dp"
-            android:layout_marginTop="125dp"
-            android:layout_marginEnd="59dp"
-            android:background="@drawable/my_button"
-            android:text="@string/create_button"
-            android:textColor="@color/colorButtonText"
-            android:textSize="15sp"
+        <LinearLayout
+            android:id="@+id/LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="horizontal"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="292dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="11dp"
+                android:text = "@string/create_button"
+                android:gravity="center"
+                android:background="@drawable/my_button"
+                android:textColor="@color/colorButtonText"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -56,7 +63,7 @@
             android:background="@color/colorBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button" />
+            app:layout_constraintTop_toBottomOf="@+id/LinearLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

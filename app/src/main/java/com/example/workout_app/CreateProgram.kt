@@ -28,7 +28,34 @@ class CreateProgram : AppCompatActivity() {
         actionbar.setDisplayHomeAsUpEnabled(true)
 
         day_list = arrayListOf<day_form>()
-        day_list.add(day_form(this, 1))
+        var max = 0
+        val program_id = intent.getIntExtra("programID", -1)
+        if (program_id != -1){
+            val list = arrayListOf<ArrayList<Any>>()
+            val data = mDatabaseHelper.getProgramExercises(program_id)
+            while(data.moveToNext()){
+                val day_nr = data.getInt(2)
+                if (day_nr > max) { max = day_nr }
+                val exName = data.getString(3)
+                val exSets = data.getInt(4)
+                val exReps = data.getInt(4)
+//                val ex = Exercise(exName, exSets, exReps)
+                list.add(arrayListOf<Any>(day_nr, exName, exSets, exReps))
+            }
+            val ex_list = arrayListOf<ArrayList<Exercise>>()
+            for (i in 1..max){
+                ex_list.add(arrayListOf())
+            }
+            for (item in list){
+                ex_list[item[0].toString().toInt() - 1].add(Exercise(item[1].toString(), item[2].toString().toInt(), item[2].toString().toInt()))
+            }
+            for (i in 1..max){
+                day_list.add(day_form(this, i))
+                day_list[i-1].exercises = ex_list[i-1]
+            }
+        } else {
+            day_list.add(day_form(this, 1))
+        }
 
         val seekBar = findViewById<SeekBar>(R.id.seekBar)
         val nrDays = findViewById<TextView>(R.id.textView3)
@@ -40,7 +67,12 @@ class CreateProgram : AppCompatActivity() {
         mRecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
 
-        var currentProgress = 1
+        var currentProgress = 0
+        if (program_id != 0){
+            currentProgress = max
+        } else {
+            currentProgress = 1
+        }
         seekBar.max = 6
         val ex_list = arrayListOf<ArrayList<Exercise>>()
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
