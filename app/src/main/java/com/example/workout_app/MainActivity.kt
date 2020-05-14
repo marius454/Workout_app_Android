@@ -16,8 +16,6 @@ class MainActivity : AppCompatActivity() {
         var button_general = findViewById<Button>(R.id.button3)
         button_custom.setOnClickListener{
             val i = Intent(this, ProgramSelection::class.java)
-//            var line = inputText.text.toString()
-//            i.putExtra("input", line)
             startActivity(i)
         }
     }

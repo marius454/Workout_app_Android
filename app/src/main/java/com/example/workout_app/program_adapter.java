@@ -45,8 +45,9 @@ public class program_adapter extends RecyclerView.Adapter<program_adapter.viewHo
         holder.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(currentItem.getContext(), CreateProgram.class);
+                Intent intent = new Intent(currentItem.getContext(), ViewProgram.class);
                 intent.putExtra("programID", currentItem.getProgramID());
+                intent.putExtra("programName", currentItem.getName());
                 currentItem.getContext().startActivity(intent);
             }
         });

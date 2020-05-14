@@ -43,15 +43,27 @@ public class day_adapter extends RecyclerView.Adapter<day_adapter.viewHolder> {
 
         holder.mButton.setText(currentItem.getDayNrText());
         holder.mButton.setId(currentItem.getDayNr());
-        holder.mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(currentItem.getContext(), DayCustomization.class);
-                intent.putExtra("dayNrText", currentItem.getDayNrText());
-                intent.putExtra("Exercises", currentItem.getExercises());
-                ((Activity) currentItem.getContext()).startActivityForResult(intent, currentItem.getDayNr());
-            }
-        });
+        if (currentItem.getLocation().equals("create")){
+            holder.mButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(currentItem.getContext(), DayCustomization.class);
+                    intent.putExtra("dayNrText", currentItem.getDayNrText());
+                    intent.putExtra("Exercises", currentItem.getExercises());
+                    ((Activity) currentItem.getContext()).startActivityForResult(intent, currentItem.getDayNr());
+                }
+            });
+        } else {
+            holder.mButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(currentItem.getContext(), ViewDay.class);
+                    intent.putExtra("dayNrText", currentItem.getDayNrText());
+                    intent.putExtra("Exercises", currentItem.getExercises());
+                    currentItem.getContext().startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override

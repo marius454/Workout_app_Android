@@ -39,7 +39,6 @@ class CreateProgram : AppCompatActivity() {
                 val exName = data.getString(3)
                 val exSets = data.getInt(4)
                 val exReps = data.getInt(4)
-//                val ex = Exercise(exName, exSets, exReps)
                 list.add(arrayListOf<Any>(day_nr, exName, exSets, exReps))
             }
             val ex_list = arrayListOf<ArrayList<Exercise>>()
@@ -132,7 +131,6 @@ class CreateProgram : AppCompatActivity() {
     }
 
     fun save(name:String, day_list: ArrayList<day_form>){
-        mDatabaseHelper.clearDB()
         val insertData = mDatabaseHelper.addProgram(name, day_list)
 
 

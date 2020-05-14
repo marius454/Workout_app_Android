@@ -9,12 +9,14 @@ public class day_form {
     private String _dayNrText;
     private Integer _dayNr;
     private ArrayList<Exercise> _exercises;
+    private String _location;
 
     public day_form(Context context, int dayNr){
         _dayNrText = "Day " + dayNr;
         _dayNr = dayNr;
         _exercises = new ArrayList<Exercise>();
         _context = context;
+        _location = "create";
     }
 
     public Integer getDayNr(){
@@ -25,11 +27,15 @@ public class day_form {
     }
     public ArrayList<Exercise> getExercises(){ return _exercises; }
     public Context getContext(){ return _context; }
+    public String getLocation(){ return _location; }
 
     public void addExercise(String name, int sets, int reps){
         _exercises.add(new Exercise(name, sets, reps));
     }
     public void setExercises(ArrayList<Exercise> exercises){
         _exercises = exercises;
+    }
+    public void setLocation(String location){
+        _location = location;
     }
 }

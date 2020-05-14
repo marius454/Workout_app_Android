@@ -12,4 +12,5 @@
     <string name="customization_buttonSave">Save Exercises</string>
     <string name="customization_buttonRemove">Remove Exercise</string>
     <string name="create_buttonSave">Save Program</string>
+    <string name="program_buttonEdit">Edit</string>
 </resources>
