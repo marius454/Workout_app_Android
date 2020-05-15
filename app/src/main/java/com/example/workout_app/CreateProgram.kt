@@ -31,22 +31,24 @@ class CreateProgram : AppCompatActivity() {
         var max = 0
         val program_id = intent.getIntExtra("programID", -1)
         if (program_id != -1){
+            programName = intent.getStringExtra("programName")
             val list = arrayListOf<ArrayList<Any>>()
             val data = mDatabaseHelper.getProgramExercises(program_id)
             while(data.moveToNext()){
                 val day_nr = data.getInt(2)
                 if (day_nr > max) { max = day_nr }
+                val exID = data.getInt(0)
                 val exName = data.getString(3)
                 val exSets = data.getInt(4)
-                val exReps = data.getInt(4)
-                list.add(arrayListOf<Any>(day_nr, exName, exSets, exReps))
+                val exReps = data.getInt(5)
+                list.add(arrayListOf<Any>(exID, day_nr, exName, exSets, exReps))
             }
             val ex_list = arrayListOf<ArrayList<Exercise>>()
             for (i in 1..max){
                 ex_list.add(arrayListOf())
             }
             for (item in list){
-                ex_list[item[0].toString().toInt() - 1].add(Exercise(item[1].toString(), item[2].toString().toInt(), item[2].toString().toInt()))
+                ex_list[item[1].toString().toInt() - 1].add(Exercise(item[0].toString().toInt(), item[2].toString(), item[3].toString().toInt(), item[4].toString().toInt()))
             }
             for (i in 1..max){
                 day_list.add(day_form(this, i))
@@ -113,7 +115,7 @@ class CreateProgram : AppCompatActivity() {
                     return@setOnClickListener
                 }
             }
-            nameAlert()
+            nameAlert(program_id)
         }
     }
 
@@ -130,9 +132,8 @@ class CreateProgram : AppCompatActivity() {
         return true
     }
 
-    fun save(name:String, day_list: ArrayList<day_form>){
+    private fun save(name:String, day_list: ArrayList<day_form>){
         val insertData = mDatabaseHelper.addProgram(name, day_list)
-
 
         if (insertData){
             Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
@@ -140,19 +141,45 @@ class CreateProgram : AppCompatActivity() {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
         }
     }
-    fun nameAlert() {
-        programName = ""
+
+    private fun saveEdits(program_id: Int, day_list: ArrayList<day_form>){
+        val saveEdit = mDatabaseHelper.EditProgram(programName, program_id, day_list)
+
+        if (saveEdit){
+            Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun nameAlert(program_id: Int) {
         val alert = AlertDialog.Builder(this)
         val nameEditText = EditText(this)
         nameEditText.filters = arrayOf<InputFilter> (InputFilter.LengthFilter(20))
-        alert.setMessage("Please name this program message")
-        alert.setTitle("Name your program")
+        if (program_id != -1){
+            nameEditText.setText(programName)
+            alert.setTitle("Edit program name")
+            alert.setMessage("You can edit your program name here if you wish")
+        } else{
+            programName = ""
+            alert.setTitle("Name your program")
+            alert.setMessage("Enter the name you wish to give to this program")
+        }
         alert.setView(nameEditText)
         alert.setPositiveButton("Save"){ dialog, positiveButton ->
             programName = nameEditText.text.toString()
-            save(programName, day_list)
-            val intent = Intent(this, ProgramSelection::class.java)
-            startActivity(intent)
+            if (program_id != -1){
+                saveEdits(program_id, day_list)
+                val intent = Intent(this, ViewProgram::class.java).apply{
+                    putExtra("programID", program_id)
+//                    putExtra("programName", programName)
+                }
+                startActivity(intent)
+            } else{
+                save(programName, day_list)
+                val intent = Intent(this, ProgramSelection::class.java)
+                startActivity(intent)
+            }
         }
         alert.show()
     }

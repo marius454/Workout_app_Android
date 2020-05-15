@@ -33,7 +33,7 @@ class DayCustomization : AppCompatActivity() {
         if (exercises != arrayListOf<Exercise>()){
             for (item in exercises){
                 ex_list.add(exercise_form(i))
-                ex_list[i-1].setExercise(item)
+                ex_list[i-1].exercise = item
                 i++
             }
             i--

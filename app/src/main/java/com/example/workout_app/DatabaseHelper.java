@@ -58,20 +58,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 eCOL6 + " integer not null, " +
                 "constraint fk_" + eCOL2 +
                 " foreign key (" + eCOL2 + ") " +
-                "references " + TABLE_NAME + "(" + COL1 + "));";
+                "references " + TABLE_NAME + "(" + COL1 + ")" +
+                " on delete cascade);";
+
 
         String journal_table = "CREATE TABLE " + jTABLE_NAME +
                 " (" + jCOL1 + " integer primary key autoincrement, " +
                 jCOL2 + " integer not null, " +
                 jCOL3 + " integer not null, " +
                 jCOL4 + " integer not null, " +
-                jCOL5 + " integer not null, " +
+                jCOL5 + " real not null, " +
                 jCOL6 + " integer not null, " +
                 " constraint fk_" + jCOL2 +
                 " foreign key (" + jCOL2 + ") " +
-                "references " + eTABLE_NAME + "(" + eCOL1 + "));";
-
-//        String createDB = program_table + exercise_table + journal_table;
+                "references " + eTABLE_NAME + "(" + eCOL1 + ")" +
+                " on delete cascade, " +
+                "unique(" + jCOL2 + ", " + jCOL3 + ", " + jCOL4 + "));";
 
         db.execSQL(program_table);
         db.execSQL(exercise_table);
@@ -100,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
 
-        long result2 = 0;
+        int result2 = 0;
         for (int i = 0; i < days.size(); i++){
             day_form day = days.get(i);
             ArrayList<Exercise> exercises = day.getExercises();
@@ -121,6 +123,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         if (result2 == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public Boolean EditProgram(String name, int program_id, ArrayList<day_form> days){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateProgram = ("Update " + TABLE_NAME +
+                " set " + COL2 + " = " + " '" + name + "', " +
+                COL4 + " = " + days.size() +
+                " where " + COL1 + " = " + program_id + ";");
+        db.execSQL(updateProgram);
+
+        String deleteOld = ("Delete from " + eTABLE_NAME +
+                " where program_id = " + program_id + ";");
+        db.execSQL(deleteOld);
+
+        int result = 0;
+        for (int i = 0; i < days.size(); i++){
+            day_form day = days.get(i);
+            ArrayList<Exercise> exercises = day.getExercises();
+            for (int j = 0; j < exercises.size(); j++){
+                Exercise ex = exercises.get(j);
+                ContentValues cv2 = new ContentValues();
+                cv2.put(eCOL2, program_id);
+                cv2.put(eCOL3, day.getDayNr());
+                cv2.put(eCOL4, ex.getName());
+                cv2.put(eCOL5, ex.getSets());
+                cv2.put(eCOL6, ex.getReps());
+
+                Log.d(TAG, "addData: Adding values to " + eTABLE_NAME);
+                if(db.insert(eTABLE_NAME, null, cv2) == -1){
+                    result = -1;
+                }
+            }
+        }
+        if (result == -1){
             return false;
         } else {
             return true;
@@ -159,5 +199,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + eTABLE_NAME);
         db.execSQL("drop table if exists " + jTABLE_NAME);
         onCreate(db);
+    }
+
+    public void DeleteProgram(int program_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteProgram = ("Delete from " + TABLE_NAME +
+                " where " + COL1 + " = " + program_id + ";");
+        db.execSQL(deleteProgram);
+    }
+
+    public void setProgramWeek(int weekNr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateProgram = "Update " + TABLE_NAME +
+                " set " + COL3 + " = " + weekNr + ";";
+        db.execSQL(updateProgram);
+    }
+    public void addToJournal(int exID, int week, int setNr, float weight, int reps){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(jCOL2, exID);
+        cv.put(jCOL3, week);
+        cv.put(jCOL4, setNr);
+        cv.put(jCOL5, weight);
+        cv.put(jCOL6, reps);
+
+        Log.d(TAG, "addData: Adding values to " + jTABLE_NAME);
+        long result = db.insertWithOnConflict(jTABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+//        if (result == -1){
+//            return false;
+//        }else {
+//            return true;
+//        }
+    }
+
+    public ArrayList getJournalEntry(int exID, int week, int setNr){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + jTABLE_NAME +
+                " where " + jCOL2 + " = " + exID +
+                " and " + jCOL3 + " = " + week +
+                " and " + jCOL4 + " = " + setNr + ";";
+        Cursor data = db.rawQuery(query, null);
+        if (data.moveToNext()){
+            ArrayList result = new ArrayList();
+            result.add(data.getFloat(4));
+            result.add(data.getInt(5));
+            return result;
+        }
+        return new ArrayList();
     }
 }

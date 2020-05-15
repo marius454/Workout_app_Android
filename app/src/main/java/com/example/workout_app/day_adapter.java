@@ -60,6 +60,7 @@ public class day_adapter extends RecyclerView.Adapter<day_adapter.viewHolder> {
                     Intent intent = new Intent(currentItem.getContext(), ViewDay.class);
                     intent.putExtra("dayNrText", currentItem.getDayNrText());
                     intent.putExtra("Exercises", currentItem.getExercises());
+                    intent.putExtra("weekNr", currentItem.getWeekNr());
                     currentItem.getContext().startActivity(intent);
                 }
             });

@@ -10,6 +10,7 @@ public class day_form {
     private Integer _dayNr;
     private ArrayList<Exercise> _exercises;
     private String _location;
+    private int _weekNr;
 
     public day_form(Context context, int dayNr){
         _dayNrText = "Day " + dayNr;
@@ -28,6 +29,7 @@ public class day_form {
     public ArrayList<Exercise> getExercises(){ return _exercises; }
     public Context getContext(){ return _context; }
     public String getLocation(){ return _location; }
+    public int getWeekNr(){ return _weekNr; }
 
     public void addExercise(String name, int sets, int reps){
         _exercises.add(new Exercise(name, sets, reps));
@@ -37,5 +39,8 @@ public class day_form {
     }
     public void setLocation(String location){
         _location = location;
+    }
+    public void setWeekNr(int weekNr){
+        _weekNr = weekNr;
     }
 }

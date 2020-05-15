@@ -162,14 +162,14 @@
         android:layout_below="@id/textBottom2">
 
         <Button
-            android:id="@+id/buttonAdd"
+            android:id="@+id/buttonPrevious"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="18dp"
             android:text="Previous" />
         <Button
-            android:id="@+id/buttonRemove"
+            android:id="@+id/buttonNext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
