@@ -81,7 +81,7 @@ class CreateProgram : AppCompatActivity() {
                 currentProgress = progress + 1
                 nrDays.text = currentProgress.toString()
 
-                for (i in 0..(day_list.size - 1)){
+                for (i in 0 until day_list.size){
                     if (ex_list.size < day_list.size){
                         ex_list.add(day_list[i].exercises)
                     } else{

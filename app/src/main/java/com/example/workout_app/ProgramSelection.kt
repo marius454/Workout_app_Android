@@ -33,7 +33,9 @@ class ProgramSelection : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
+//        onBackPressed()
         return true
     }
 
